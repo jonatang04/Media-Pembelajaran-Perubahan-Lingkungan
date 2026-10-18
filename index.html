@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 EcoLearn | Perubahan Lingkungan — Media Pembelajaran Interaktif</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap');
+
+:root {
+  --p: #0d47a1; --pl: #1976d2; --a: #00897b; --al: #26a69a;
+  --d: #e53935; --w: #f9a825; --s: #43a047; --bg: #e8f4fd;
+  --card: #fff; --muted: #546e7a; --r: 18px;
+  --sh: 0 8px 32px rgba(13,71,161,.14);
+  --shh: 0 16px 48px rgba(13,71,161,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',system-ui,sans-serif;background:linear-gradient(135deg,#dbeafe 0%,#e0f2fe 30%,#ccfbf1 60%,#f3e8ff 100%);background-attachment:fixed;color:#1e293b;line-height:1.65;overflow-x:hidden}
+
+/* particles */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:.12;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) rotate(0);opacity:0}10%{opacity:.15}90%{opacity:.15}100%{transform:translateY(-10vh) rotate(720deg);opacity:0}}
+
+/* topbar */
+.topbar{background:linear-gradient(135deg,#0d47a1,#1565c0,#00695c);background-size:300% 300%;animation:gshift 10s ease infinite;color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+@keyframes gshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.topbar h1{font-family:'Fredoka',sans-serif;font-size:1.2rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.topbar h1 .spin{display:inline-block;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topbar .meta{font-size:.78rem;opacity:.9}
+
+/* nav */
+nav{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(13,71,161,.08);padding:0 8px;display:flex;gap:1px;overflow-x:auto;position:sticky;top:50px;z-index:199;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:none;border:none;padding:13px 13px;font-size:.78rem;font-family:inherit;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .3s}
+nav button:hover{color:var(--p);background:rgba(13,71,161,.05)}
+nav button.active{color:var(--p);border-bottom-color:var(--p);font-weight:700}
+
+/* sections */
+.section{display:none;padding:28px 16px 70px;max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.section.active{display:block}
+.section.active .anim{animation:up .55s cubic-bezier(.22,1,.36,1) both}
+.section.active .anim:nth-child(1){animation-delay:.04s}
+.section.active .anim:nth-child(2){animation-delay:.1s}
+.section.active .anim:nth-child(3){animation-delay:.16s}
+.section.active .anim:nth-child(4){animation-delay:.22s}
+.section.active .anim:nth-child(5){animation-delay:.28s}
+.section.active .anim:nth-child(6){animation-delay:.34s}
+.section.active .anim:nth-child(7){animation-delay:.4s}
+@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+
+/* hero */
+.hero{text-align:center;padding:48px 24px;background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(224,242,254,.9));border-radius:24px;margin-bottom:24px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero::before,.hero::after{content:'';position:absolute;border-radius:50%;filter:blur(40px)}
+.hero::before{width:280px;height:280px;background:rgba(0,137,123,.18);top:-70px;right:-50px;animation:orb 7s ease-in-out infinite alternate}
+.hero::after{width:220px;height:220px;background:rgba(13,71,161,.14);bottom:-50px;left:-30px;animation:orb 9s ease-in-out infinite alternate-reverse}
+@keyframes orb{from{transform:translate(0,0)}to{transform:translate(25px,18px)}}
+.hero h2{font-family:'Fredoka',sans-serif;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,#0d47a1,#00897b,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;position:relative}
+.hero .sub{color:var(--muted);font-size:1rem;margin-bottom:18px;position:relative}
+.badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;margin:3px;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,.15);transition:transform .3s;position:relative}
+.badge:hover{transform:scale(1.1) translateY(-2px)}
+.b1{background:linear-gradient(135deg,#0d47a1,#1976d2)}
+.b2{background:linear-gradient(135deg,#00695c,#00897b)}
+.b3{background:linear-gradient(135deg,#6a1b9a,#9c27b0)}
+.authors{margin-top:20px;font-size:.85rem;color:var(--muted);position:relative}
+.authors strong{color:var(--p)}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--sh);transition:transform .35s,box-shadow .35s;border:1px solid rgba(13,71,161,.05)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shh)}
+.card h3{color:var(--p);font-size:1.15rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.card h3 .ic{width:40px;height:40px;background:linear-gradient(135deg,#e0f2fe,#b3e5fc);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;transition:transform .4s}
+.card:hover h3 .ic{transform:rotate(10deg) scale(1.12)}
+.card p{margin-bottom:8px;color:#334155;font-size:.92rem}
+.card ul,.card ol{padding-left:20px;margin-bottom:8px}
+.card li{margin-bottom:5px;font-size:.9rem}
+
+/* grids */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+
+/* boxes */
+.ibox,.wbox,.dbox{padding:14px 18px;border-radius:0 14px 14px 0;margin:12px 0;font-size:.9rem}
+.ibox{border-left:5px solid var(--a);background:linear-gradient(90deg,#e0f2f1,#f0fdfa)}
+.wbox{border-left:5px solid var(--w);background:linear-gradient(90deg,#fff8e1,#fffbeb)}
+.dbox{border-left:5px solid var(--d);background:linear-gradient(90deg,#ffebee,#fef2f2)}
+
+/* feature tiles */
+.ft{text-align:center;padding:20px 12px;border-radius:16px;background:linear-gradient(160deg,#f8fafc,#f1f5f9);border:1px solid #e2e8f0;transition:all .35s;cursor:default}
+.ft:hover{transform:translateY(-8px) scale(1.03);box-shadow:var(--sh);border-color:var(--pl)}
+.ft .em{font-size:2.4rem;margin-bottom:8px;display:inline-block;transition:transform .4s}
+.ft:hover .em{transform:scale(1.25) rotate(-10deg)}
+.ft h4{color:var(--p);font-size:.95rem;font-weight:700;margin-bottom:4px}
+.ft p{font-size:.8rem;color:var(--muted)}
+
+/* table */
+table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.85rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+th,td{padding:11px 13px;text-align:left}
+th{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;font-weight:600}
+td{border-bottom:1px solid #e8eaf0;background:#fff}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f0f7ff}
+
+/* flip cards */
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;perspective:800px}
+.flip{height:180px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-f,.flip-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;box-shadow:var(--sh)}
+.flip-f{background:linear-gradient(160deg,#e0f2fe,#bbdefb)}
+.flip-b{background:linear-gradient(160deg,#e0f2f1,#b2dfdb);transform:rotateY(180deg)}
+.flip-f .em{font-size:2.5rem;margin-bottom:8px}
+.flip-f h4{color:var(--p);font-size:.95rem}
+.flip-b p{font-size:.82rem;color:#334155}
+
+/* timeline */
+.timeline{position:relative;padding-left:30px;margin:16px 0}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--p),var(--a));border-radius:2px}
+.tl-item{position:relative;margin-bottom:18px;padding:14px 16px;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);transition:transform .3s}
+.tl-item:hover{transform:translateX(6px)}
+.tl-item::before{content:'';position:absolute;left:-24px;top:18px;width:14px;height:14px;border-radius:50%;background:var(--p);border:3px solid #fff;box-shadow:0 0 0 3px var(--p)}
+.tl-item h4{color:var(--p);font-size:.95rem;margin-bottom:4px}
+.tl-item p{font-size:.85rem;color:#475569}
+
+/* accordion */
+.acc{margin-bottom:8px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.acc-h{background:linear-gradient(135deg,#e3f2fd,#e0f7fa);padding:14px 18px;cursor:pointer;font-weight:600;color:var(--p);display:flex;justify-content:space-between;align-items:center;font-size:.92rem;transition:background .3s;user-select:none}
+.acc-h:hover{background:linear-gradient(135deg,#bbdefb,#b2dfdb)}
+.acc-h .arr{transition:transform .3s;font-size:1.1rem}
+.acc.open .acc-h .arr{transform:rotate(180deg)}
+.acc-b{max-height:0;overflow:hidden;transition:max-height .4s ease;background:#fff}
+.acc.open .acc-b{max-height:400px}
+.acc-b-in{padding:14px 18px;font-size:.88rem;color:#334155}
+
+/* scenario cards */
+.scenario{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:16px;padding:20px;margin:12px 0;border:2px solid #fbbf24;cursor:pointer;transition:all .3s}
+.scenario:hover{transform:scale(1.02);box-shadow:0 8px 24px rgba(251,191,36,.3)}
+.scenario h4{color:#92400e;margin-bottom:6px}
+.scenario p{font-size:.88rem;color:#78350f}
+.scenario .reveal{display:none;margin-top:10px;padding:12px;background:rgba(255,255,255,.7);border-radius:10px;font-size:.85rem}
+.scenario.open .reveal{display:block;animation:up .3s ease}
+
+/* drag match */
+.match-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.match-item{padding:12px 14px;border-radius:12px;background:#f1f5f9;border:2px dashed #94a3b8;text-align:center;font-size:.85rem;font-weight:500;cursor:grab;transition:all .3s;user-select:none}
+.match-item:active{cursor:grabbing}
+.match-item.dragging{opacity:.5;transform:scale(1.05)}
+.match-item.correct{background:#dcfce7;border-color:#22c55e;border-style:solid}
+.match-item.wrong{background:#fee2e2;border-color:#ef4444;border-style:solid}
+.drop-zone{padding:12px 14px;border-radius:12px;background:#fff;border:2px solid #cbd5e1;text-align:center;font-size:.85rem;min-height:48px;transition:all .3s}
+.drop-zone.over{border-color:var(--pl);background:#e0f2fe;transform:scale(1.03)}
+.drop-zone.filled{border-style:solid;background:#f0fdf4;border-color:#22c55e}
+
+/* quiz */
+.quiz-q{background:#fff;border-radius:var(--r);padding:22px;margin-bottom:14px;box-shadow:var(--sh);animation:up .4s ease both}
+.quiz-q h4{color:var(--p);margin-bottom:12px;font-size:1rem}
+.opt{display:block;padding:13px 16px;margin:7px 0;background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;transition:all .25s;font-weight:500;font-size:.9rem}
+.opt:hover{border-color:var(--pl);background:#e0f2fe;transform:translateX(6px)}
+.opt.correct{border-color:var(--s);background:#dcfce7;animation:pop .4s ease}
+.opt.wrong{border-color:var(--d);background:#fee2e2;animation:shake .4s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt.disabled{pointer-events:none}
+.fb{margin-top:10px;font-weight:600;display:none;font-size:.95rem}
+.fb.show{display:block;animation:up .3s ease}
+
+/* buttons */
+.btn{display:inline-block;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;padding:12px 26px;border-radius:12px;font-size:.95rem;font-family:inherit;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(13,71,161,.3)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(13,71,161,.4)}
+.btn-a{background:linear-gradient(135deg,var(--a),var(--al))}
+.btn-sm{padding:8px 16px;font-size:.82rem}
+
+/* sdg */
+.sdg{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #e2e8f0;padding:10px 14px;border-radius:12px;margin:4px;font-size:.82rem;font-weight:500;transition:all .3s;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.sdg:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.sdg-n{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem}
+
+/* progress */
+.prog-bar{height:8px;background:#e2e8f0;border-radius:4px;margin:14px 0 6px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--a),var(--p));border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1);position:relative}
+.prog-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shim 1.5s infinite}
+@keyframes shim{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* stats */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.stat{text-align:center;padding:16px 8px;background:linear-gradient(160deg,#e0f2fe,#e0f7fa);border-radius:14px;transition:transform .3s}
+.stat:hover{transform:scale(1.06)}
+.stat .n{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--p),var(--a));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat .l{font-size:.72rem;color:var(--muted);font-weight:500;margin-top:2px}
+
+/* tip popup */
+.tip{position:relative;display:inline-block;cursor:help;border-bottom:2px dotted var(--pl);color:var(--p);font-weight:600}
+.tip .tiptext{visibility:hidden;width:220px;background:#1e293b;color:#fff;text-align:left;border-radius:10px;padding:10px 12px;position:absolute;z-index:10;bottom:130%;left:50%;transform:translateX(-50%);font-size:.78rem;font-weight:400;opacity:0;transition:opacity .3s;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.tip:hover .tiptext{visibility:visible;opacity:1}
+
+/* confetti */
+.confetti{position:fixed;width:10px;height:10px;top:-10px;z-index:999;animation:cf 3s ease-in forwards}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* footer */
+.pg-ft{text-align:center;padding:24px 16px;color:var(--muted);font-size:.78rem;border-top:1px solid rgba(13,71,161,.08);margin-top:16px;position:relative;z-index:1}
+
+/* reflective question */
+.reflect{background:linear-gradient(135deg,#ede9fe,#e0e7ff);border-radius:16px;padding:18px;margin:14px 0;border:2px solid #a78bfa}
+.reflect h4{color:#5b21b6;margin-bottom:6px;font-size:.95rem}
+.reflect textarea{width:100%;border:2px solid #c4b5fd;border-radius:10px;padding:10px;font-family:inherit;font-size:.88rem;resize:vertical;min-height:70px;margin-top:8px;transition:border-color .3s}
+.reflect textarea:focus{outline:none;border-color:#7c3aed}
+
+/* hotspots */
+.hotspot-wrap{position:relative;background:linear-gradient(160deg,#bbdefb,#b2dfdb);border-radius:16px;padding:30px;min-height:200px;text-align:center}
+.hs{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(13,71,161,.85);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;cursor:pointer;animation:pulseHS 2s ease infinite;box-shadow:0 0 0 0 rgba(13,71,161,.5);transition:transform .3s}
+.hs:hover{transform:scale(1.2)}
+@keyframes pulseHS{0%{box-shadow:0 0 0 0 rgba(13,71,161,.5)}70%{box-shadow:0 0 0 12px rgba(13,71,161,0)}100%{box-shadow:0 0 0 0 rgba(13,71,161,0)}}
+.hs-info{display:none;margin-top:16px;padding:14px;background:#fff;border-radius:12px;font-size:.88rem;text-align:left;box-shadow:var(--sh)}
+.hs-info.show{display:block;animation:up .3s ease}
+
+@media(max-width:600px){
+  .hero h2{font-size:1.6rem}
+  nav button{padding:11px 8px;font-size:.7rem}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .match-area{grid-template-columns:1fr}
+  .topbar h1{font-size:.95rem}
+}
+</style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+
+<div class="topbar">
+  <h1><span class="spin">🌍</span> EcoLearn — Perubahan Lingkungan</h1>
+  <div class="meta">Biologi Fase F • XI • 2026/2027 • Kelompok 4</div>
+</div>
+
+<nav>
+  <button class="active" data-s="home">🏠 Beranda</button>
+  <button data-s="tujuan">🎯 Tujuan</button>
+  <button data-s="keseimbangan">⚖️ Keseimbangan</button>
+  <button data-s="pencemaran">🏭 Pencemaran</button>
+  <button data-s="iklim">🌡️ Iklim</button>
+  <button data-s="suksesi">🔄 Suksesi</button>
+  <button data-s="dampak">💥 Dampak</button>
+  <button data-s="solusi">♻️ Solusi</button>
+  <button data-s="kasus">🔎 Studi Kasus</button>
+  <button data-s="aktivitas">🎮 Aktivitas</button>
+  <button data-s="kuis">📝 Kuis</button>
+</nav>
+
+<!-- ===== HOME ===== -->
+<section id="home" class="section active">
+  <div class="hero anim">
+    <div style="font-size:3.2rem;animation:spin 12s linear infinite;display:inline-block;filter:drop-shadow(0 4px 12px rgba(0,137,123,.3))">🌍</div>
+    <h2>Perubahan Lingkungan</h2>
+    <p class="sub">Media Pembelajaran Digital Interaktif • Problem Based Learning</p>
+    <span class="badge b1">Kurikulum Merdeka</span>
+    <span class="badge b2">Fase F</span>
+    <span class="badge b1">Biologi</span>
+    <span class="badge b3">Kelompok 4</span>
+    <div class="authors">
+      <strong>Disusun oleh:</strong><br>
+      Grace Bunga Simarmata • Gysella Angeline Sitio • Santi Dameana Habeahan<br>
+      Sarah Anjania Saro • Hastati Wulan Deswara
+    </div>
+  </div>
+
+  <div class="stat-row anim">
+    <div class="stat"><div class="n" data-t="11">0</div><div class="l">Bagian Materi</div></div>
+    <div class="stat"><div class="n" data-t="10">0</div><div class="l">Soal Kuis</div></div>
+    <div class="stat"><div class="n" data-t="5">0</div><div class="l">Aktivitas Interaktif</div></div>
+    <div class="stat"><div class="n" data-t="3">0</div><div class="l">SDGs Terkait</div></div>
+  </div>
+
+  <div class="card anim">
+    <h3><span class="ic">🚀</span> Selamat Datang di EcoLearn!</h3>
+    <p>Media ini dirancang agar kamu <strong>tidak hanya menghafal</strong>, tetapi <em>mengalami</em> pembelajaran: mengamati, menganalisis, bermain, dan merumuskan solusi berbasis bukti ilmiah.</p>
+    <p>Jelajahi 11 bagian materi, coba aktivitas interaktif (kartu balik, cocokkan, skenario), lalu uji diri di kuis 10 soal!</p>
+  </div>
+
+  <div class="g3 anim">
+    <div class="card" style="text-align:center;padding:24px 12px">
+      <div style="font-size:2.6rem;animation:bounce 2.5s ease infinite">🌡️</div>
+      <h4 style="color:var(--p);margin:6px 0 2px">Perubahan Iklim</h4>
+      <p style="font-size:.82rem;color:var(--muted)">Efek rumah kaca & dampak global</p>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 12px">
+      <div style="font-size:2.6rem;animation:bounce 2.5s ease .3s infinite">🏭</div>
+      <h4 style="color:var(--p);margin:6px 0 2px">Pencemaran</h4>
+      <p style="font-size:.82rem;color:var(--muted)">Udara, air, tanah & dampaknya</p>
+    </div>
+    <div class="card" style="text-align:center;padding:24px 12px">
+      <div style="font-size:2.6rem;animation:bounce 2.5s ease .6s infinite">🌱</div>
+      <h4 style="color:var(--p);margin:6px 0 2px">Solusi Hijau</h4>
+      <p style="font-size:.82rem;color:var(--muted)">Mitigasi, adaptasi & 3R</p>
+    </div>
+  </div>
+
+  <div class="card anim">
+    <h3><span class="ic">🇺🇳</span> Integrasi SDGs</h3>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center">
+      <div class="sdg"><span class="sdg-n" style="background:#3f7e44">13</span> Penanganan Perubahan Iklim</div>
+      <div class="sdg"><span class="sdg-n" style="background:#56c02b">15</span> Ekosistem Daratan</div>
+      <div class="sdg"><span class="sdg-n" style="background:#4c9f38">3</span> Kehidupan Sehat & Sejahtera</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TUJUAN ===== -->
+<section id="tujuan" class="section">
+  <div class="card anim">
+    <h3><span class="ic">📋</span> Tujuan Pembelajaran</h3>
+    <ol>
+      <li>Mengidentifikasi faktor penyebab perubahan lingkungan (alamiah & antropogenik) serta jenis-jenis pencemaran.</li>
+      <li>Menjelaskan dampak pencemaran udara, air, dan tanah terhadap ekosistem dan kesehatan manusia.</li>
+      <li>Menganalisis data/grafik perubahan lingkungan untuk menafsirkan tren dan dampaknya.</li>
+      <li>Menjelaskan konsep suksesi ekosistem dan upaya pemulihan lingkungan.</li>
+      <li>Menganalisis permasalahan lingkungan lokal/global dan menyusun saran solusi berdasarkan bukti ilmiah.</li>
+    </ol>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">💡</span> Pertanyaan Pemantik</h3>
+    <ul>
+      <li>Bagaimana aktivitas manusia memengaruhi keseimbangan lingkungan?</li>
+      <li>Apa persamaan dan perbedaan pencemaran udara, air, dan tanah?</li>
+      <li>Bagaimana data/grafik membantu menafsirkan tren perubahan lingkungan?</li>
+      <li>Bagaimana suksesi berperan dalam pemulihan ekosistem?</li>
+      <li>Bagaimana membedakan informasi lingkungan yang tepercaya?</li>
+    </ul>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">🧠</span> Kata Kunci yang Akan Kamu Kuasai</h3>
+    <div class="g4" style="margin-top:8px">
+      <span class="badge b1">Antropogenik</span>
+      <span class="badge b2">Eutrofikasi</span>
+      <span class="badge b3">Bioakumulasi</span>
+      <span class="badge b1">Efek Rumah Kaca</span>
+      <span class="badge b2">Suksesi</span>
+      <span class="badge b3">Mitigasi</span>
+      <span class="badge b1">BOD / COD</span>
+      <span class="badge b2">3R</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KESEIMBANGAN ===== -->
+<section id="keseimbangan" class="section">
+  <div class="card anim">
+    <h3><span class="ic">⚖️</span> Keseimbangan & Perubahan Lingkungan</h3>
+    <p>Lingkungan hidup = sistem <strong>biotik</strong> (makhluk hidup) + <strong>abiotik</strong> (fisik-kimia). Keseimbangan terjadi saat interaksi antar komponen stabil. Ketika salah satu komponen terganggu secara signifikan, rantai makanan dan fungsi ekosistem dapat rusak.</p>
+  </div>
+  <div class="g2 anim">
+    <div class="ibox">
+      <strong>🌿 Faktor Alamiah</strong>
+      <ul style="margin-top:6px">
+        <li>Gunung meletus & gempa bumi</li>
+        <li>Banjir, tsunami, longsor</li>
+        <li>Kebakaran hutan alami</li>
+        <li>Perubahan iklim alami (siklus)</li>
+      </ul>
+    </div>
+    <div class="dbox">
+      <strong>🏭 Faktor Antropogenik</strong>
+      <ul style="margin-top:6px">
+        <li>Deforestasi & alih fungsi lahan</li>
+        <li>Industrialisasi & polusi</li>
+        <li>Pertanian intensif (pupuk/pestisida)</li>
+        <li>Urbanisasi, sampah, emisi kendaraan</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">🔗</span> Komponen yang Saling Terkait</h3>
+    <div class="hotspot-wrap">
+      <p style="margin-bottom:12px;font-weight:600;color:var(--p)">Klik titik-titik untuk menjelajahi!</p>
+      <div style="position:relative;height:160px">
+        <div class="hs" style="top:10%;left:20%" onclick="showHS(1)">1</div>
+        <div class="hs" style="top:10%;left:70%" onclick="showHS(2)">2</div>
+        <div class="hs" style="top:60%;left:15%" onclick="showHS(3)">3</div>
+        <div class="hs" style="top:60%;left:75%" onclick="showHS(4)">4</div>
+        <div class="hs" style="top:35%;left:45%" onclick="showHS(5)">5</div>
+      </div>
+      <div class="hs-info" id="hsInfo">Klik salah satu titik di atas.</div>
+    </div>
+  </div>
+  <div class="wbox anim"><strong>⚠️ Ingat:</strong> Gangguan keseimbangan → putusnya rantai makanan → penurunan keanekaragaman hayati → terganggunya jasa ekosistem (air bersih, pengaturan iklim, penyerbukan, dll).</div>
+</section>
+
+<!-- ===== PENCEMARAN ===== -->
+<section id="pencemaran" class="section">
+  <div class="card anim">
+    <h3><span class="ic">💨</span> Pencemaran Udara</h3>
+    <p>Zat/energi masuk ke atmosfer → kualitas udara menurun.</p>
+    <div class="g3" style="margin-top:12px">
+      <div class="ft"><div class="em">🚗</div><h4>Sumber</h4><p>Kendaraan, industri, pembakaran fosil, kebakaran hutan</p></div>
+      <div class="ft"><div class="em">☠️</div><h4>Polutan</h4><p>CO, CO₂, SO₂, NOₓ, PM2.5, CFC, O₃ permukaan</p></div>
+      <div class="ft"><div class="em">😷</div><h4>Dampak</h4><p>ISPA, hujan asam, efek rumah kaca, ozon menipis</p></div>
+    </div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">💧</span> Pencemaran Air</h3>
+    <table>
+      <tr><th>Aspek</th><th>Keterangan</th></tr>
+      <tr><td>Sumber</td><td>Limbah domestik, industri, pertanian, tumpahan minyak, sampah plastik</td></tr>
+      <tr><td>Indikator</td><td><span class="tip">BOD<span class="tiptext">Biochemical Oxygen Demand — kebutuhan O₂ mikroba mengurai bahan organik</span></span>, <span class="tip">COD<span class="tiptext">Chemical Oxygen Demand — oksigen untuk oksidasi kimia</span></span>, pH, kekeruhan, logam berat</td></tr>
+      <tr><td>Dampak</td><td><span class="tip">Eutrofikasi<span class="tiptext">Ledakan alga karena kelebihan nutrien → O₂ habis → ikan mati</span></span>, kematian biota, <span class="tip">bioakumulasi<span class="tiptext">Penumpukan zat beracun di tubuh organisme sepanjang rantai makanan</span></span></td></tr>
+    </table>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">🌍</span> Pencemaran Tanah</h3>
+    <p>Limbah padat, logam berat, pestisida, bahan kimia industri masuk ke tanah → kesuburan turun, rantai makanan terkontaminasi.</p>
+    <div class="ibox"><strong>Solusi:</strong> bioremediasi (mikroba), fitoremediasi (tanaman), pengelolaan limbah B3, pengurangan pestisida, pengomposan.</div>
+  </div>
+  <!-- Flip cards -->
+  <div class="card anim">
+    <h3><span class="ic">🃏</span> Kartu Balik — Kenali Polutan!</h3>
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:10px">Klik kartu untuk membalik dan melihat penjelasannya.</p>
+    <div class="flip-grid">
+      <div class="flip" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
+        <div class="flip-f"><div class="em">🌫️</div><h4>PM2.5</h4><p style="font-size:.75rem;color:var(--muted)">Klik untuk detail</p></div>
+        <div class="flip-b"><p><strong>Particulate Matter ≤2.5 μm</strong><br>Partikel halus yang masuk ke paru-paru. Sumber: asap kendaraan, industri, kebakaran. Menyebabkan ISPA & penyakit jantung.</p></div>
+      </div></div>
+      <div class="flip" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
+        <div class="flip-f"><div class="em">☁️</div><h4>SO₂</h4><p style="font-size:.75rem;color:var(--muted)">Klik untuk detail</p></div>
+        <div class="flip-b"><p><strong>Sulfur Dioksida</strong><br>Dari pembakaran batu bara & minyak. Penyebab utama hujan asam yang merusak bangunan, hutan, dan danau.</p></div>
+      </div></div>
+      <div class="flip" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
+        <div class="flip-f"><div class="em">🧴</div><h4>CFC</h4><p style="font-size:.75rem;color:var(--muted)">Klik untuk detail</p></div>
+        <div class="flip-b"><p><strong>Chlorofluorocarbon</strong><br>Dulu dipakai di AC & semprotan. Merusak lapisan ozon stratosfer yang melindungi kita dari UV berbahaya.</p></div>
+      </div></div>
+      <div class="flip" onclick="this.classList.toggle('flipped')"><div class="flip-inner">
+        <div class="flip-f"><div class="em">🛢️</div><h4>Logam Berat</h4><p style="font-size:.75rem;color:var(--muted)">Klik untuk detail</p></div>
+        <div class="flip-b"><p><strong>Hg, Pb, Cd</strong><br>Tidak terurai. Menumpuk di tubuh (bioakumulasi). Merkuri dari industri → penyakit Minamata. Timbal → gangguan saraf.</p></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IKLIM ===== -->
+<section id="iklim" class="section">
+  <div class="card anim">
+    <h3><span class="ic">🌡️</span> Perubahan Iklim & Efek Rumah Kaca</h3>
+    <p><strong>Perubahan iklim</strong> = perubahan jangka panjang pola cuaca & suhu bumi. <strong>Efek rumah kaca</strong> = gas rumah kaca menahan panas di atmosfer (seperti selimut).</p>
+    <div class="g3" style="margin-top:14px">
+      <div class="ft"><div class="em">🏭</div><h4>CO₂</h4><p>Pembakaran fosil, deforestasi — kontributor terbesar</p></div>
+      <div class="ft"><div class="em">🐄</div><h4>CH₄ (Metana)</h4><p>Peternakan, lahan basah, TPA — 28× lebih kuat dari CO₂</p></div>
+      <div class="ft"><div class="em">❄️</div><h4>N₂O & CFC</h4><p>Pupuk kimia, pendingin — daya rusak sangat tinggi</p></div>
+    </div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">📈</span> Rantai Dampak Perubahan Iklim</h3>
+    <div class="timeline">
+      <div class="tl-item"><h4>1. Emisi Gas Rumah Kaca ↑</h4><p>Pembakaran fosil, deforestasi, industri → konsentrasi CO₂ & CH₄ naik.</p></div>
+      <div class="tl-item"><h4>2. Suhu Global ↑</h4><p>Lebih banyak panas tertahan → global warming.</p></div>
+      <div class="tl-item"><h4>3. Es Polar Mencair</h4><p>Permukaan laut naik → ancaman banjir pesisir & pulau kecil.</p></div>
+      <div class="tl-item"><h4>4. Cuaca Ekstrem</h4><p>Banjir, kekeringan, badai, gelombang panas lebih sering & intens.</p></div>
+      <div class="tl-item"><h4>5. Ancaman Biodiversitas</h4><p>Habitat rusak, spesies punah, ketahanan pangan terancam.</p></div>
+    </div>
+  </div>
+  <div class="wbox anim"><strong>💡 Literasi Sains:</strong> Klaim “perubahan iklim hanya fenomena alami” perlu diuji dengan data tren suhu global & konsentrasi CO₂ (misalnya dari NASA, IPCC, BMKG). Data menunjukkan laju kenaikan suhu sejak era industri jauh lebih cepat daripada siklus alami.</div>
+</section>
+
+<!-- ===== SUKSESI ===== -->
+<section id="suksesi" class="section">
+  <div class="card anim">
+    <h3><span class="ic">🔄</span> Suksesi Ekosistem</h3>
+    <p>Suksesi = proses perubahan komunitas secara bertahap menuju komunitas klimaks (stabil).</p>
+    <div class="g2" style="margin-top:14px">
+      <div class="card" style="box-shadow:none;border:2px solid #90caf9;margin:0">
+        <h4 style="color:var(--p)">🌱 Suksesi Primer</h4>
+        <p>Lahan <strong>tanpa kehidupan sebelumnya</strong>.</p>
+        <p style="font-size:.85rem;color:var(--muted)">Contoh: lava dingin, batuan baru, gletser mundur.<br>Dimulai dari organisme pionir (lumut, ganggang).</p>
+      </div>
+      <div class="card" style="box-shadow:none;border:2px solid #80cbc4;margin:0">
+        <h4 style="color:var(--a)">🌿 Suksesi Sekunder</h4>
+        <p>Lahan yang <strong>pernah dihuni tetapi terganggu</strong>.</p>
+        <p style="font-size:.85rem;color:var(--muted)">Contoh: bekas ladang, hutan terbakar, danau mengering.<br>Lebih cepat karena masih ada tanah & biji.</p>
+      </div>
+    </div>
+    <div class="ibox">Memahami suksesi membantu merancang <strong>pemulihan ekosistem</strong> (reboisasi, restorasi mangrove, reklamasi) secara lebih efektif.</div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">📊</span> Tahapan Suksesi (Umum)</h3>
+    <div class="timeline">
+      <div class="tl-item"><h4>Fase Pionir</h4><p>Organisme tahan ekstrem (lumut, lichen, rumput) mulai menempati lahan gundul.</p></div>
+      <div class="tl-item"><h4>Fase Menengah</h4><p>Semak & pohon muda muncul; keanekaragaman meningkat; tanah semakin subur.</p></div>
+      <div class="tl-item"><h4>Komunitas Klimaks</h4><p>Hutan stabil, biodiversitas tinggi, siklus nutrien seimbang.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAMPAK ===== -->
+<section id="dampak" class="section">
+  <div class="card anim">
+    <h3><span class="ic">💥</span> Dampak Perubahan Lingkungan — Lebih Dekat</h3>
+    <p>Perubahan lingkungan tidak hanya “di luar sana”. Dampaknya menyentuh kesehatan, ekonomi, sosial, dan masa depan generasi berikutnya.</p>
+  </div>
+  <div class="g2 anim">
+    <div class="card" style="border-top:4px solid #e53935">
+      <h4 style="color:#c62828">🫁 Kesehatan</h4>
+      <ul>
+        <li>ISPA & asma akibat polusi udara</li>
+        <li>Keracunan logam berat (Hg, Pb)</li>
+        <li>Penyakit bawaan air (kolera, diare)</li>
+        <li>Stres panas & dehidrasi</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid #f9a825">
+      <h4 style="color:#f57f17">🌾 Ekonomi & Pangan</h4>
+      <ul>
+        <li>Gagal panen karena kekeringan/banjir</li>
+        <li>Penurunan hasil perikanan</li>
+        <li>Kerusakan infrastruktur pesisir</li>
+        <li>Biaya kesehatan meningkat</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid #43a047">
+      <h4 style="color:#2e7d32">🦋 Biodiversitas</h4>
+      <ul>
+        <li>Kepunahan spesies</li>
+        <li>Hilangnya habitat hutan & terumbu karang</li>
+        <li>Gangguan rantai makanan</li>
+        <li>Invasi spesies asing</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid #7c3aed">
+      <h4 style="color:#6a1b9a">🏘️ Sosial</h4>
+      <ul>
+        <li>Pengungsian iklim (climate refugee)</li>
+        <li>Konflik sumber daya (air, lahan)</li>
+        <li>Ketimpangan dampak (miskin lebih rentan)</li>
+        <li>Ancaman budaya masyarakat adat</li>
+      </ul>
+    </div>
+  </div>
+  <div class="reflect anim">
+    <h4>🤔 Refleksi: Dampak di Sekitarmu</h4>
+    <p style="font-size:.88rem;color:#5b21b6">Pernahkah kamu mengalami/melihat dampak perubahan lingkungan di daerahmu? Tuliskan secara singkat:</p>
+    <textarea id="reflect1" placeholder="Contoh: Sungai di kampung saya sering banjir karena sampah..."></textarea>
+  </div>
+</section>
+
+<!-- ===== SOLUSI ===== -->
+<section id="solusi" class="section">
+  <div class="card anim">
+    <h3><span class="ic">♻️</span> Upaya Pelestarian & Mitigasi</h3>
+    <h4 style="color:var(--p);margin:8px 0">Prinsip 3R (+2)</h4>
+    <div class="g4">
+      <div class="ft" style="background:linear-gradient(160deg,#dcfce7,#f0fdf4)"><div class="em">⬇️</div><h4>Reduce</h4><p>Kurangi konsumsi</p></div>
+      <div class="ft" style="background:linear-gradient(160deg,#e0f2fe,#eff6ff)"><div class="em">🔁</div><h4>Reuse</h4><p>Gunakan kembali</p></div>
+      <div class="ft" style="background:linear-gradient(160deg,#fef3c7,#fffbeb)"><div class="em">♻️</div><h4>Recycle</h4><p>Daur ulang</p></div>
+      <div class="ft" style="background:linear-gradient(160deg,#fce7f3,#fdf2f8)"><div class="em">🛠️</div><h4>Repair & Refuse</h4><p>Perbaiki & tolak plastik sekali pakai</p></div>
+    </div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">⚔️</span> Mitigasi vs Adaptasi</h3>
+    <table>
+      <tr><th>Mitigasi (Cegah)</th><th>Adaptasi (Sesuaikan)</th></tr>
+      <tr>
+        <td>Kurangi emisi GRK: energi terbarukan, reboisasi, efisiensi energi, transportasi publik, diet rendah daging</td>
+        <td>Hadapi dampak yang sudah ada: tanggul laut, varietas tanaman tahan kekeringan, sistem peringatan dini, rumah panggung</td>
+      </tr>
+    </table>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">🏠</span> Apa yang Bisa Kamu Lakukan?</h3>
+    <div class="g2">
+      <div class="ibox">
+        <strong>Di Rumah</strong>
+        <ul>
+          <li>Matikan lampu & AC saat tidak dipakai</li>
+          <li>Pisahkan sampah organik & anorganik</li>
+          <li>Bawa botol minum & tas belanja sendiri</li>
+          <li>Tanam pohon / tanaman di halaman</li>
+        </ul>
+      </div>
+      <div class="ibox">
+        <strong>Di Sekolah & Komunitas</strong>
+        <ul>
+          <li>Ikut bank sampah / eco-club</li>
+          <li>Kampanye hemat energi</li>
+          <li>Bersih-bersih sungai/pantai</li>
+          <li>Edukasi teman tentang isu lingkungan</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card anim">
+    <h3><span class="ic">🔍</span> Literasi Informasi Lingkungan</h3>
+    <p>Sumber tepercaya memiliki: identitas jelas (lembaga/penulis), bukti ilmiah & data mutakhir, bahasa objektif. <strong>Hindari</strong> klaim yang hanya populer di media sosial tanpa sumber.</p>
+    <div class="wbox">Contoh sumber tepercaya: BMKG, KLHK, IPCC, NASA Climate, jurnal ilmiah, situs kementerian kesehatan.</div>
+  </div>
+</section>
+
+<!-- ===== STUDI KASUS ===== -->
+<section id="kasus" class="section">
+  <div class="card anim">
+    <h3><span class="ic">🔎</span> Studi Kasus — Analisis Berbasis Bukti</h3>
+    <p>Klik setiap skenario untuk membuka analisis dan pertanyaan diskusi.</p>
+  </div>
+  <div class="scenario anim" onclick="this.classList.toggle('open')">
+    <h4>🔥 Kasus 1: Kabut Asap & Kebakaran Hutan</h4>
+    <p>Setiap musim kemarau, kabut asap menyelimuti Sumatera & Kalimantan. Ribuan warga mengalami ISPA. Apa penyebab utamanya?</p>
+    <div class="reveal">
+      <strong>Analisis:</strong> Sebagian besar kebakaran terkait pembukaan lahan (slash-and-burn) untuk sawit & pertanian. Kondisi El Niño memperparah kekeringan. Polutan: PM2.5, CO, CO₂.<br>
+      <strong>Diskusi:</strong> Bagaimana kebijakan moratorium sawit dan pemantauan satelit bisa membantu? Apa peran masyarakat lokal?
+    </div>
+  </div>
+  <div class="scenario anim" onclick="this.classList.toggle('open')">
+    <h4>🏭 Kasus 2: Pencemaran Sungai oleh Limbah Industri</h4>
+    <p>Sungai di kawasan industri berubah warna dan berbau. Ikan mati massal. Warga mengeluh gatal-gatal.</p>
+    <div class="reveal">
+      <strong>Analisis:</strong> Limbah cair industri (logam berat, zat organik) dibuang tanpa pengolahan memadai. BOD/COD tinggi → oksigen habis. Bioakumulasi logam di ikan → bahaya konsumsi.<br>
+      <strong>Diskusi:</strong> Apa peran AMDAL dan pengawasan dinas lingkungan? Bagaimana warga bisa melapor secara efektif?
+    </div>
+  </div>
+  <div class="scenario anim" onclick="this.classList.toggle('open')">
+    <h4>🌊 Kasus 3: Kenaikan Muka Air Laut di Pesisir</h4>
+    <p>Kampung nelayan di pesisir utara Jawa semakin sering tergenang rob. Tambak rusak, rumah terendam.</p>
+    <div class="reveal">
+      <strong>Analisis:</strong> Kombinasi kenaikan muka laut global (mencairnya es + ekspansi termal) dan penurunan tanah (subsidence) karena ekstraksi air tanah.<br>
+      <strong>Diskusi:</strong> Solusi mitigasi (kurangi emisi) vs adaptasi (tanggul, elevasi rumah, mangrove)? Mana yang lebih mendesak secara lokal?
+    </div>
+  </div>
+  <div class="scenario anim" onclick="this.classList.toggle('open')">
+    <h4>🗑️ Kasus 4: Sampah Plastik di Laut</h4>
+    <p>Penyu ditemukan mati dengan perut penuh plastik. Mikroplastik terdeteksi di ikan konsumsi.</p>
+    <div class="reveal">
+      <strong>Analisis:</strong> 80% sampah laut berasal dari darat. Plastik tidak terurai, pecah jadi mikroplastik → masuk rantai makanan. Indonesia termasuk penyumbang terbesar sampah plastik laut.<br>
+      <strong>Diskusi:</strong> Efektivitas larangan kantong plastik sekali pakai? Peran daur ulang vs pengurangan di sumber?
+    </div>
+  </div>
+</section>
+
+<!-- ===== AKTIVITAS ===== -->
+<section id="aktivitas" class="section">
+  <div class="card anim">
+    <h3><span class="ic">🎮</span> Aktivitas Interaktif</h3>
+    <p>Uji pemahamanmu dengan permainan singkat di bawah ini!</p>
+  </div>
+
+  <!-- Match game -->
+  <div class="card anim">
+    <h3><span class="ic">🧩</span> Cocokkan: Polutan → Dampak</h3>
+    <p style="font-size:.85rem;color:var(--muted)">Seret item di kiri ke zona yang tepat di kanan. (Di perangkat sentuh: ketuk kiri lalu ketuk kanan)</p>
+    <div class="match-area" id="matchGame">
+      <div>
+        <div class="match-item" draggable="true" data-id="so2">SO₂</div>
+        <div class="match-item" draggable="true" data-id="pm">PM2.5</div>
+        <div class="match-item" draggable="true" data-id="nutrien">Nutrien berlebih (N,P)</div>
+        <div class="match-item" draggable="true" data-id="cf c">CFC</div>
+      </div>
+      <div>
+        <div class="drop-zone" data-ans="so2">→ Hujan asam</div>
+        <div class="drop-zone" data-ans="pm">→ ISPA / masuk paru-paru</div>
+        <div class="drop-zone" data-ans="nutrien">→ Eutrofikasi</div>
+        <div class="drop-zone" data-ans="cfc">→ Rusak lapisan ozon</div>
+      </div>
+    </div>
+    <p id="matchResult" style="text-align:center;font-weight:600;margin-top:8px"></p>
+    <div style="text-align:center;margin-top:8px"><button class="btn btn-sm btn-a" onclick="resetMatch()">Reset</button></div>
+  </div>
+
+  <!-- Accordion glossary -->
+  <div class="card anim">
+    <h3><span class="ic">📖</span> Glosarium Cepat (Klik untuk buka)</h3>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">Antropogenik <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in">Berasal dari aktivitas manusia. Lawan dari alamiah (natural).</div></div></div>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">Eutrofikasi <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in">Pengayaan berlebih nutrien (N, P) di perairan → ledakan alga → oksigen habis → kematian massal biota air.</div></div></div>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">Bioakumulasi <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in">Penumpukan zat beracun (mis. logam berat) di dalam tubuh organisme seiring waktu, meningkat di tingkat trofik lebih tinggi (biomagnifikasi).</div></div></div>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">BOD (Biochemical Oxygen Demand) <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in">Jumlah oksigen yang dibutuhkan mikroorganisme untuk mengurai bahan organik dalam air. Semakin tinggi BOD, semakin tercemar.</div></div></div>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">Mitigasi vs Adaptasi <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in"><strong>Mitigasi:</strong> mengurangi penyebab (emisi). <strong>Adaptasi:</strong> menyesuaikan diri terhadap dampak yang sudah/akan terjadi.</div></div></div>
+    <div class="acc" onclick="this.classList.toggle('open')"><div class="acc-h">Suksesi Primer vs Sekunder <span class="arr">▼</span></div><div class="acc-b"><div class="acc-b-in"><strong>Primer:</strong> dari lahan tanpa kehidupan (lava, batuan). <strong>Sekunder:</strong> dari lahan yang pernah dihuni lalu terganggu (bekas ladang, hutan terbakar).</div></div></div>
+  </div>
+
+  <div class="reflect anim">
+    <h4>✍️ Tantangan: Rancang Solusi</h4>
+    <p style="font-size:.88rem;color:#5b21b6">Pilih satu masalah lingkungan di daerahmu. Tuliskan 1 penyebab, 1 dampak, dan 1 solusi konkret yang bisa dilakukan siswa:</p>
+    <textarea id="reflect2" placeholder="Masalah: ...&#10;Penyebab: ...&#10;Dampak: ...&#10;Solusi: ..."></textarea>
+  </div>
+</section>
+
+<!-- ===== KUIS ===== -->
+<section id="kuis" class="section">
+  <div class="card anim">
+    <h3><span class="ic">📝</span> Kuis Interaktif — 10 Soal</h3>
+    <p>Pilih jawaban terbaik. Skor muncul di akhir. Semangat!</p>
+    <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+    <p id="scoreText" style="text-align:center;color:var(--muted);font-size:.85rem">Soal 0 / 10</p>
+  </div>
+  <div id="quizArea"></div>
+  <div id="resultBox" class="card" style="display:none;text-align:center">
+    <div style="font-size:3rem;margin-bottom:6px" id="resultEmoji">🎉</div>
+    <h3>Hasil Kuis</h3>
+    <p id="finalScore" style="font-size:2.2rem;font-weight:800;margin:10px 0;background:linear-gradient(135deg,#0d47a1,#00897b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"></p>
+    <p id="finalMsg" style="margin-bottom:16px;font-size:1.05rem"></p>
+    <button class="btn" onclick="resetQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+</section>
+
+<div class="pg-ft">
+  EcoLearn • Media Pembelajaran Digital Interaktif • Perubahan Lingkungan<br>
+  Biologi Fase F • Kelompok 4 • Kurikulum Merdeka • 2026/2027<br>
+  Grace Bunga Simarmata • Gysella Angeline Sitio • Santi Dameana Habeahan • Sarah Anjania Saro • Hastati Wulan Deswara
+</div>
+
+<script>
+/* particles */
+(function(){
+  const box=document.getElementById('particles');
+  const cols=['#0d47a1','#00897b','#1976d2','#26a69a','#7c3aed','#42a5f5'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');p.className='particle';
+    const s=5+Math.random()*18;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-duration:${10+Math.random()*20}s;animation-delay:${Math.random()*12}s`;
+    box.appendChild(p);
+  }
+})();
+
+/* counters */
+function animateCounters(){
+  document.querySelectorAll('.n[data-t]').forEach(el=>{
+    const t=+el.dataset.t;let c=0;const step=Math.max(1,Math.ceil(t/25));
+    const tm=setInterval(()=>{c+=step;if(c>=t){c=t;clearInterval(tm)}el.textContent=c},40);
+  });
+}
+
+/* nav */
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.s).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(btn.dataset.s==='home')setTimeout(animateCounters,200);
+  });
+});
+
+/* hotspots */
+const hsData={
+  1:{t:'Komponen Biotik',d:'Semua makhluk hidup: produsen (tumbuhan), konsumen (hewan), dekomposer (bakteri, jamur). Mereka saling bergantung melalui rantai & jaring makanan.'},
+  2:{t:'Komponen Abiotik',d:'Faktor fisik-kimia: suhu, cahaya, air, tanah, udara, pH, kelembaban. Menentukan jenis organisme yang dapat hidup di suatu tempat.'},
+  3:{t:'Rantai Makanan',d:'Aliran energi dari produsen → konsumen tingkat 1 → 2 → dst. Jika satu tingkat terganggu, seluruh rantai bisa goyah.'},
+  4:{t:'Siklus Biogeokimia',d:'Siklus karbon, nitrogen, fosfor, air. Menghubungkan komponen biotik & abiotik. Pencemaran dapat mengganggu siklus ini.'},
+  5:{t:'Keseimbangan Dinamis',d:'Ekosistem selalu berubah sedikit, tetapi cenderung kembali seimbang (homeostasis). Gangguan besar (polusi, deforestasi) dapat melewati ambang batas.'}
+};
+function showHS(n){
+  const info=document.getElementById('hsInfo');
+  const d=hsData[n];
+  info.innerHTML=`<strong>${d.t}</strong><br>${d.d}`;
+  info.classList.add('show');
+}
+
+/* match game */
+let dragId=null, matched=0;
+const totalMatch=4;
+document.querySelectorAll('.match-item').forEach(item=>{
+  item.addEventListener('dragstart',e=>{dragId=item.dataset.id;item.classList.add('dragging')});
+  item.addEventListener('dragend',()=>item.classList.remove('dragging'));
+  // touch support
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.match-item').forEach(m=>m.style.outline='');
+    item.style.outline='3px solid #1976d2';
+    dragId=item.dataset.id;
+  });
+});
+document.querySelectorAll('.drop-zone').forEach(zone=>{
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('over')});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('over'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('over');
+    checkMatch(zone);
+  });
+  zone.addEventListener('click',()=>{if(dragId)checkMatch(zone)});
+});
+function checkMatch(zone){
+  if(!dragId||zone.classList.contains('filled'))return;
+  const item=document.querySelector(`.match-item[data-id="${dragId}"]`);
+  if(dragId===zone.dataset.ans){
+    zone.classList.add('filled');zone.textContent='✅ '+zone.textContent.replace('→ ','');
+    item.classList.add('correct');item.draggable=false;item.style.outline='';
+    matched++;
+    if(matched===totalMatch)document.getElementById('matchResult').textContent='🎉 Sempurna! Semua cocok!';
+  }else{
+    item.classList.add('wrong');
+    setTimeout(()=>item.classList.remove('wrong'),600);
+  }
+  dragId=null;
+  document.querySelectorAll('.match-item').forEach(m=>m.style.outline='');
+}
+function resetMatch(){
+  matched=0;dragId=null;
+  document.getElementById('matchResult').textContent='';
+  document.querySelectorAll('.match-item').forEach(m=>{m.classList.remove('correct','wrong');m.draggable=true;m.style.outline=''});
+  document.querySelectorAll('.drop-zone').forEach(z=>{
+    z.classList.remove('filled','over');
+    const labels={'so2':'→ Hujan asam','pm':'→ ISPA / masuk paru-paru','nutrien':'→ Eutrofikasi','cfc':'→ Rusak lapisan ozon'};
+    z.textContent=labels[z.dataset.ans];
+  });
+}
+
+/* quiz — 10 questions */
+const questions=[
+  {q:"1. Faktor penyebab perubahan lingkungan dari aktivitas manusia disebut …",opts:["Faktor alamiah","Faktor antropogenik","Faktor biotik","Faktor abiotik"],ans:1},
+  {q:"2. Gas rumah kaca utama dari pembakaran bahan bakar fosil adalah …",opts:["O₂","N₂","CO₂","H₂"],ans:2},
+  {q:"3. Proses perubahan komunitas secara bertahap menuju komunitas klimaks disebut …",opts:["Eutrofikasi","Suksesi","Bioakumulasi","Deforestasi"],ans:1},
+  {q:"4. Indikator kualitas air yang mengukur kebutuhan O₂ mikroba mengurai bahan organik adalah …",opts:["pH","BOD","Salinitas","Turbiditas saja"],ans:1},
+  {q:"5. Prinsip 3R meliputi …",opts:["Reduce, Reuse, Recycle","Remove, Replace, Repair","Read, Run, Rest","Reduce, Remove, Rebuild"],ans:0},
+  {q:"6. Ledakan alga karena kelebihan nutrien di perairan yang menyebabkan oksigen habis disebut …",opts:["Bioakumulasi","Eutrofikasi","Suksesi primer","Asidifikasi"],ans:1},
+  {q:"7. Suksesi yang terjadi pada lahan bekas ladang atau hutan terbakar adalah …",opts:["Suksesi primer","Suksesi sekunder","Suksesi tersier","Klimaks awal"],ans:1},
+  {q:"8. Upaya mengurangi emisi gas rumah kaca termasuk tindakan …",opts:["Adaptasi","Mitigasi","Suksesi","Eutrofikasi"],ans:1},
+  {q:"9. Penumpukan zat beracun di tubuh organisme sepanjang rantai makanan disebut …",opts:["Eutrofikasi","Fotosintesis","Bioakumulasi","Transpirasi"],ans:2},
+  {q:"10. CFC berbahaya karena …",opts:["Menyebabkan hujan asam","Merusak lapisan ozon","Meningkatkan BOD air","Menyebabkan eutrofikasi"],ans:1}
+];
+let cur=0,score=0,answered=false;
+
+function renderQ(){
+  const area=document.getElementById('quizArea');
+  const rb=document.getElementById('resultBox');
+  rb.style.display='none';
+  if(cur>=questions.length){
+    area.innerHTML='';
+    rb.style.display='block';
+    document.getElementById('finalScore').textContent=score+' / '+questions.length;
+    const pct=Math.round(score/questions.length*100);
+    let msg='',em='🎉';
+    if(pct===100){msg='Sempurna! Kamu menguasai materi ini! 🌟';em='🏆';launchConfetti()}
+    else if(pct>=80){msg='Sangat baik! Tinggal sedikit lagi sempurna. 💪';em='🌟'}
+    else if(pct>=60){msg='Bagus! Pelajari lagi bagian yang masih lemah. 👍';em='🎉'}
+    else{msg='Belum maksimal. Ulangi materi & coba lagi! 📚';em='💪'}
+    document.getElementById('finalMsg').textContent=msg;
+    document.getElementById('resultEmoji').textContent=em;
+    document.getElementById('prog').style.width='100%';
+    document.getElementById('scoreText').textContent='Selesai!';
+    return;
+  }
+  answered=false;
+  const q=questions[cur];
+  let h=`<div class="quiz-q"><h4>${q.q}</h4>`;
+  q.opts.forEach((o,i)=>{h+=`<div class="opt" onclick="checkAns(${i})">${String.fromCharCode(65+i)}. ${o}</div>`});
+  h+=`<div class="fb" id="fb"></div></div>`;
+  area.innerHTML=h;
+  document.getElementById('prog').style.width=(cur/questions.length*100)+'%';
+  document.getElementById('scoreText').textContent=`Soal ${cur+1} / ${questions.length}`;
+}
+function checkAns(i){
+  if(answered)return;answered=true;
+  const q=questions[cur];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const fb=document.getElementById('fb');
+  if(i===q.ans){opts[i].classList.add('correct');fb.textContent='✅ Benar! Hebat!';fb.style.color='#2e7d32';score++}
+  else{opts[i].classList.add('wrong');opts[q.ans].classList.add('correct');fb.textContent='❌ Kurang tepat. Jawaban benar ditandai hijau.';fb.style.color='#c62828'}
+  fb.classList.add('show');
+  setTimeout(()=>{cur++;renderQ()},1400);
+}
+function resetQuiz(){cur=0;score=0;renderQ()}
+function launchConfetti(){
+  const cols=['#0d47a1','#00897b','#fbbf24','#e53935','#43a047','#ab47bc','#ec4899'];
+  for(let i=0;i<50;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%cols.length]};border-radius:${Math.random()>.5?'50%':'2px'};width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.9}s`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4500);
+  }
+}
+renderQ();
+setTimeout(animateCounters,400);
+</script>
+</body>
+</html>
